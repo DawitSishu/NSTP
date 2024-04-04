@@ -35,4 +35,37 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { signUp };
+//@desc logs in a user
+//@route POST /api/user/login
+//@access public
+const logIn = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    const error = new Error("All fields are required");
+    error.statusCode = 400;
+    throw error;
+  }
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    const err = new Error("Incorrect Email or Password");
+    err.statusCode = 401;
+    throw err;
+  }
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatch) {
+    const err = new Error("Incorrect Email or Password");
+    err.statusCode = 401;
+    throw err;
+  }
+  const { password: omitPassword, ...userData } = user.toObject();
+
+  const token = jwt.sign(userData, process.env.SECRET_KEY, { expiresIn: "1d" });
+  console.log(token);
+  res.json({
+    token,
+  });
+});
+
+module.exports = { signUp, logIn };
