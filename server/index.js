@@ -8,6 +8,7 @@ app.use(cors());
 
 const PORT = process.env.PORT || 5000;
 connectToDb();
+app.use(require("express").json());
 
 app.use("/api/user", require("./Routes/UserRoutes"));
 
