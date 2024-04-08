@@ -68,4 +68,13 @@ const logIn = asyncHandler(async (req, res) => {
   });
 });
 
+
+//@desc get profile info
+//@route GET /api/user/profile
+//@access private
+const profile = asyncHandler(async (req,res) => {
+  
+})
+
+
 module.exports = { signUp, logIn };
