@@ -31,7 +31,7 @@ const signUp = asyncHandler(async (req, res) => {
 
     const savedUser = await newUser.save();
 
-    res.status(201).json(savedUser);
+    res.status(201).json({ success: true, data: savedUser });
   }
 });
 
@@ -64,17 +64,23 @@ const logIn = asyncHandler(async (req, res) => {
   const token = jwt.sign(userData, process.env.SECRET_KEY, { expiresIn: "1d" });
   console.log(token);
   res.json({
-    token,
+    success: true,
+    data: token,
   });
 });
-
 
 //@desc get profile info
 //@route GET /api/user/profile
 //@access private
-const profile = asyncHandler(async (req,res) => {
-  
-})
+const profile = asyncHandler(async (req, res) => {
+  const user = req.user;
 
+  res.status(200).json({
+    success: true,
+    data: {
+      user,
+    },
+  });
+});
 
-module.exports = { signUp, logIn };
+module.exports = { signUp, logIn, profile };

@@ -18,12 +18,12 @@ const userSchema = mongoose.Schema({
     tiktok: { type: String }
   },
   subscriptionPlan: { type: String, default: null },
-  subscriptionExpiry: { type: Date },
   isVerified: { type: Boolean, default: false },
   paymentInfo: {
-    cardNumber: { type: String },
-    expirationDate: { type: Date }
+    Account: { type: String },
+    Bank: { type: String }
   },
+  completed: {type : Boolean, default: false}
 
 });
 
