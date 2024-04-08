@@ -73,7 +73,15 @@ const logIn = asyncHandler(async (req, res) => {
 //@route GET /api/user/profile
 //@access private
 const profile = asyncHandler(async (req, res) => {
-  const user = req.user;
+  const ID = req.user._id;
+
+  const user = await User.findOne({
+    _id: ID,
+  });
+
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found." });
+  }
 
   res.status(200).json({
     success: true,
@@ -83,4 +91,35 @@ const profile = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { signUp, logIn, profile };
+//@desc update profile
+//@route PUT /api/user/profile
+//@access private
+const updateProfile = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const vals = req.body;
+  const ID = user._id;
+
+  if (!ID) {
+    const err = new Error("Unauthorized to access this resource.");
+    err.statusCode = 401;
+    throw err;
+  }
+
+  const newUser = await User.findByIdAndUpdate(
+    ID,
+    { ...vals, completed: true },
+    {
+      new: true,
+    }
+  );
+
+  if (!newUser) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Error Updating Profile" });
+  }
+
+  res.status(200).json({ success: true, data: newUser });
+});
+
+module.exports = { signUp, logIn, profile, updateProfile };
