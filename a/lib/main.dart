@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:a/Pages/live_room.dart';
 import 'package:a/Pages/sign_up.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class MainApp extends StatelessWidget {
         fontFamily: 'Poppins',
       ),
       initialRoute: '/',
-      routes: {"/": (context) => SignUP()},
+      routes: {"/": (context) => LiveRoom()},
     );
   }
 }
