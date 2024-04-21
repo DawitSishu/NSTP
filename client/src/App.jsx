@@ -1,6 +1,7 @@
 import React, { Suspense, useState } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./app.css";
 
 const Login = React.lazy(() => import("./Pages/LogIn"));
 
@@ -8,13 +9,13 @@ const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#05223b",
+      main: "#EFCFA9",
     },
     secondary: {
-      main: "#EEE2B1",
+      main: "#EEB195",
     },
     tertiary: {
-      main: "#FFFFFF",
+      main: "#B3423C",
     },
     background: {},
   },
