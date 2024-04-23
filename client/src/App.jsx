@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./app.css";
 
 const Login = React.lazy(() => import("./Pages/LogIn"));
+const SignUp = React.lazy(() => import("./Pages/SignUp"));
 
 const darkTheme = createTheme({
   palette: {
@@ -50,7 +51,24 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<div>hi</div>} />
-          <Route exact path="/login" element={<Login />} />
+          <Route
+            exact
+            path="/login"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <Login />
+              </Suspense>
+            }
+          />
+          <Route
+            exact
+            path="/signup"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <SignUp />
+              </Suspense>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
