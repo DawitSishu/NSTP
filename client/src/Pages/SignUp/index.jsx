@@ -7,81 +7,108 @@ import {
   Google as GoogleIcon,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { SignUP } from "../../Services/Auth";
 
 const index = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      await SignUP(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
-      <Grid
-        container
-        spacing={2}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        style={{ minHeight: "100vh" }}
-      >
-        <Grid item>
-          <img src={logo} alt="Logo" style={{ width: 180 }} />
-        </Grid>
-        <Grid item>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <Box mr={1}>
-                  <EmailIcon color="action" />
-                </Box>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            type="password"
-            label="Password"
-            variant="outlined"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <Box mr={1}>
-                  <LockIcon color="action" />
-                </Box>
-              ),
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <Grid container spacing={2}>
-            <Grid item>
-              <Button variant="contained" color="primary" fullWidth>
-                Sign Up
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="outlined" fullWidth startIcon={<GoogleIcon />}>
-                Sign in with Google
-              </Button>
+      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        <Grid
+          container
+          spacing={2}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          style={{ minHeight: "100vh" }}
+        >
+          <Grid item>
+            <img src={logo} alt="Logo" style={{ width: 180 }} />
+          </Grid>
+          <Grid item>
+            <TextField
+              label="Email"
+              variant="outlined"
+              {...register("email")}
+              required
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <Box mr={1}>
+                    <EmailIcon color="action" />
+                  </Box>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              type="password"
+              label="Password"
+              {...register("password")}
+              required
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <Box mr={1}>
+                    <LockIcon color="action" />
+                  </Box>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <Grid container spacing={2}>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  type="submit"
+                >
+                  Sign Up
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button variant="outlined" fullWidth startIcon={<GoogleIcon />}>
+                  Sign in with Google
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        <Grid item>
-          <Typography variant="body2" color="textSecondary">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              style={{
-                textDecoration: "none",
-                color: "#EFCFA9",
-                fontWeight: "bold",
-              }}
-            >
-              Log in
-            </Link>
-          </Typography>
+          <Grid item>
+            <Typography variant="body2" color="textSecondary">
+              Already have an account?{" "}
+              <Link
+                to="/login"
+                style={{
+                  textDecoration: "none",
+                  color: "#EFCFA9",
+                  fontWeight: "bold",
+                }}
+              >
+                Log in
+              </Link>
+            </Typography>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </div>
   );
 };

@@ -2,16 +2,20 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBuW5uTHVZFTTgBwkAEnFw5_E8RD3RCJOk",
-  authDomain: "jemaw-c6f46.firebaseapp.com",
-  projectId: "jemaw-c6f46",
-  storageBucket: "jemaw-c6f46.appspot.com",
-  messagingSenderId: "641640506424",
-  appId: "1:641640506424:web:f8b0d2a8d623f41442b2cd",
+  apiKey: "AIzaSyAiatVIRRJATLbxPrAnXlhXfES_DJNM_no",
+  authDomain: "jemawf-c48af.firebaseapp.com",
+  projectId: "jemawf-c48af",
+  storageBucket: "jemawf-c48af.appspot.com",
+  messagingSenderId: "1090327528678",
+  appId: "1:1090327528678:web:c68aeeeb24f020fb092727",
+  measurementId: "G-M8J0YVL16M",
 };
-initializeApp(firebaseConfig);
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
