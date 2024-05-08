@@ -6,11 +6,12 @@ import {
   Lock as LockIcon,
   Google as GoogleIcon,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { SignIN } from "../../Services/Auth";
 
 const index = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -21,6 +22,7 @@ const index = () => {
   const onSubmit = async (data) => {
     try {
       await SignIN(data);
+      navigate("/home");
     } catch (error) {
       console.log(error);
     }

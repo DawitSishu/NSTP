@@ -7,6 +7,7 @@ import "./app.css";
 
 const Login = React.lazy(() => import("./Pages/LogIn"));
 const SignUp = React.lazy(() => import("./Pages/SignUp"));
+const Home = React.lazy(() => import("./Pages/Home"));
 
 const darkTheme = createTheme({
   palette: {
@@ -59,7 +60,7 @@ const App = () => {
               path="/home"
               element={
                 <ProtectedRoute>
-                  <div>home</div>
+                  <Home />
                 </ProtectedRoute>
               }
             />
