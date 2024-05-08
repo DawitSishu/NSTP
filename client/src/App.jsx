@@ -1,20 +1,25 @@
 import React, { Suspense, useState } from "react";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthContext } from "./Services/AuthContext";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import "./app.css";
 
 const Login = React.lazy(() => import("./Pages/LogIn"));
+const SignUp = React.lazy(() => import("./Pages/SignUp"));
+const Home = React.lazy(() => import("./Pages/Home"));
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#05223b",
+      main: "#EFCFA9",
     },
     secondary: {
-      main: "#EEE2B1",
+      main: "#EEB195",
     },
     tertiary: {
-      main: "#FFFFFF",
+      main: "#B3423C",
     },
     background: {},
   },
@@ -44,15 +49,43 @@ const darkTheme = createTheme({
 
 const App = () => {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<div>hi</div>} />
-          <Route exact path="/login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
-    </ThemeProvider>
+    <AuthContext>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <Routes>
+            <Route exact path="/" element={<div>hi</div>} />
+            <Route
+              exact
+              path="/home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              exact
+              path="/login"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Login />
+                </Suspense>
+              }
+            />
+            <Route
+              exact
+              path="/signup"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <SignUp />
+                </Suspense>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </AuthContext>
   );
 };
 
