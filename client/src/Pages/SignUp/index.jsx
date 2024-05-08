@@ -92,7 +92,7 @@ const index = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  type="submit"
+                  type="submit" 
                 >
                   Sign Up
                 </Button>
