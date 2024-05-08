@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { SignIN } from "../../Services/Auth";
+import { SignIN, GoogleSignIN } from "../../Services/Auth";
 
 const index = () => {
   const navigate = useNavigate();
@@ -22,6 +22,15 @@ const index = () => {
   const onSubmit = async (data) => {
     try {
       await SignIN(data);
+      navigate("/home");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleLogIn = async () => {
+    try {
+      await GoogleSignIN();
       navigate("/home");
     } catch (error) {
       console.log(error);
@@ -88,7 +97,7 @@ const index = () => {
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" fullWidth startIcon={<GoogleIcon />}>
+                <Button variant="outlined" fullWidth startIcon={<GoogleIcon />} onClick={googleLogIn}>
                   Sign in with Google
                 </Button>
               </Grid>
