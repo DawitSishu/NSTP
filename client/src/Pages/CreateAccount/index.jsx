@@ -13,6 +13,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { uploadProfile, CreateAccount } from "../../Services/Storage";
 
 const AccountCreationPage = () => {
   const { user } = useContext(Context);
@@ -20,8 +21,63 @@ const AccountCreationPage = () => {
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const [pic, setPic] = useState([]);
+  const [avatar, setAvatar] = useState(null);
+
+  const isImageTypeValid = (file) => {
+    const allowedTypes = ["image/jpeg", "image/png"];
+    return allowedTypes.includes(file.type);
+  };
+
+  const handleIMGChange = async (event) => {
+    const files = event.target.files;
+
+    if (files.length === 0) {
+      alert("Make sure to Select an Image.");
+      return;
+    }
+    const invalidFiles = Array.from(files).filter(
+      (file) => !isImageTypeValid(file)
+    );
+
+    if (invalidFiles.length > 0) {
+      alert(`Invalid file type. Please select JPG or PNG images only.`);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatar(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
+    setPic((prevFiles) => [...files]);
+  };
+
+  const CompleteProfile = async () => {
+    try {
+      const profileURL = await uploadProfile(pic, user.uid);
+      if (!profileURL) {
+        // error message
+        alert("error");
+        return;
+      }
+
+      const data = {
+        userID: user.uid,
+        dob: dob.toDate(),
+        phone,
+        username,
+        profile: profileURL,
+      };
+
+      const doc = await CreateAccount(data);
+
+      console.log(doc);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   console.log(user.uid);
+  console.log(pic);
 
   return (
     <Container
@@ -47,10 +103,17 @@ const AccountCreationPage = () => {
           <form>
             <TextField
               label="Phone"
+              type="tel"
               fullWidth
               margin="normal"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                const numericValue = e.target.value
+                  .replace(/[^0-9]/g, "")
+                  .substring(0, 10);
+                setPhone(numericValue);
+              }}
+              placeholder="09 *** *** ****"
             />
             <TextField
               label="Username"
@@ -74,6 +137,7 @@ const AccountCreationPage = () => {
               style={{ display: "none" }}
               id="icon-button-file"
               type="file"
+              onChange={handleIMGChange}
             />
             <label htmlFor="icon-button-file">
               <Button
@@ -87,7 +151,7 @@ const AccountCreationPage = () => {
             </label>
             <Avatar
               alt="Uploaded Picture"
-              src="#"
+              src={avatar}
               style={{
                 width: "80px",
                 height: "80px",
@@ -100,6 +164,7 @@ const AccountCreationPage = () => {
               color="primary"
               fullWidth
               style={{ marginTop: "1rem" }}
+              onClick={CompleteProfile}
             >
               FINISH
             </Button>

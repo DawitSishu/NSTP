@@ -4,6 +4,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 export const uploadProfile = async (pic, id) => {
   try {
@@ -15,12 +16,21 @@ export const uploadProfile = async (pic, id) => {
     const downloadUrls = await Promise.all(uploadPromises);
     return downloadUrls[0];
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return null;
   }
 };
 
-export const CreateAccount = async () => {
+export const CreateAccount = async (data) => {
+  try {
+    const docRef = await addDoc(collection(db, "users"), {
+      ...data,
+    });
+    return docRef;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
   //email
   // phone
   //     pic:
