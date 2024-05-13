@@ -14,9 +14,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { uploadProfile, CreateAccount } from "../../Services/Storage";
+import { useNavigate } from "react-router-dom";
 
 const AccountCreationPage = () => {
   const { user } = useContext(Context);
+  const navigate = useNavigate();
   const [dob, setDob] = useState(null);
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
@@ -59,6 +61,23 @@ const AccountCreationPage = () => {
         alert("error");
         return;
       }
+      const today = new Date();
+      const birthDate = dob.toDate();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+
+      // If birthdate is in future or current month but day hasn't happened yet
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ) {
+        age--;
+      }
+
+      if (age < 18) {
+        alert("You must be at least 18 years old to complete your profile.");
+        return;
+      }
 
       const data = {
         userID: user.uid,
@@ -69,8 +88,11 @@ const AccountCreationPage = () => {
       };
 
       const doc = await CreateAccount(data);
-
-      console.log(doc);
+      if (typeof doc !== "string") {
+        navigate("/home");
+      } else {
+        alert(doc);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -86,6 +108,15 @@ const AccountCreationPage = () => {
     >
       <Typography variant="h4" align="center" gutterBottom>
         Welcome to Our Platform!
+      </Typography>
+      <Typography align="center" mb={2}>
+        Welcome to Jemaw, your digital circle of friends where every voice is
+        heard and celebrated! Just like a close-knit group of friends, Jemaw is
+        here to support you, inspire you, and cheer you on. Whether you're a
+        creator sharing your passions or an audience member enjoying the show,
+        you're among friends here. Let's create, connect, and make memories
+        together. Join us in the warmth of Jemaw's embrace and let your journey
+        begin!
       </Typography>
       <Grid container spacing={4}>
         {/* Image Section */}
