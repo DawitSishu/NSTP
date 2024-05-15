@@ -19,6 +19,8 @@ import Typography from "@mui/material/Typography";
 import HomeIcon from "@mui/icons-material/Home";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Home from "./Home";
+import { useMediaQuery } from "@mui/material";
 
 const iconMap = {
   Home: <HomeIcon />,
@@ -33,6 +35,7 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [selectedItem, setSelectedItem] = React.useState("Home");
   const [isClosing, setIsClosing] = React.useState(false);
+  const isMobile = useMediaQuery("(max-width:768px)");
 
   const handleItemClick = (text) => {
     setSelectedItem(text);
@@ -76,8 +79,19 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: isMobile ? "block" : "flex" }}>
       <CssBaseline />
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          sx={{ mr: 2, display: { sm: "none" } }}
+        >
+          <MenuIcon fontSize="50px" />
+        </IconButton>
+      </Toolbar>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -120,12 +134,17 @@ function ResponsiveDrawer(props) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
+          pr: 4,
+          pl: isMobile ? 4 : 0,
+          pt: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        {/* <Toolbar /> */}
-        <Typography paragraph>{selectedItem}</Typography>
+        {selectedItem == "Home" ? (
+          <Home />
+        ) : (
+          <Typography paragraph>{selectedItem}</Typography>
+        )}
       </Box>
     </Box>
   );
