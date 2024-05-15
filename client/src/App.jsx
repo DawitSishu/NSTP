@@ -9,6 +9,7 @@ const Login = React.lazy(() => import("./Pages/LogIn"));
 const SignUp = React.lazy(() => import("./Pages/SignUp"));
 const Home = React.lazy(() => import("./Pages/Home"));
 const Create = React.lazy(() => import("./Pages/CreateAccount"));
+const Dash = React.lazy(() => import("./Pages/Dash"));
 
 const darkTheme = createTheme({
   palette: {
@@ -60,9 +61,10 @@ const App = () => {
               exact
               path="/home"
               element={
-                <ProtectedRoute>
-                  <Home />
-                </ProtectedRoute>
+                // <ProtectedRoute>
+                //   <Home />
+                // </ProtectedRoute>
+                <Dash />
               }
             />
             <Route

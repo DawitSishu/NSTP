@@ -140,16 +140,16 @@ function Controls() {
               priority: "PIN",
               gridSize: "20",
             },
-            theme: "LIGHT",
+            theme: "DARK",
             mode: "video-and-audio",
-            quality: "high",
-            orientation: "landscape",
+            quality: "med",
+            orientation: "portrait",
           });
         }}
       >
-        Start HLS
+        Start Stream
       </button>
-      <button onClick={() => stopHls()}>Stop HLS</button>
+      <button onClick={() => stopHls()}>Stop Stream</button>
     </div>
   );
 }
@@ -327,7 +327,7 @@ function App() {
         meetingId,
         micEnabled: true,
         webcamEnabled: true,
-        name: "C.V. Raman",
+        name: "D",
         //This will be the mode of the participant CONFERENCE or VIEWER
         mode: mode,
       }}
