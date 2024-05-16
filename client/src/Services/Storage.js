@@ -60,3 +60,18 @@ export const CreateAccount = async (data) => {
   //   dob:
   //   bio:
 };
+
+export const getUserInfo = async (uid) => {
+  try {
+    const userQuery = query(
+      collection(db, "users"),
+      where("userID", "==", uid)
+    );
+
+    const querySnapshot = await getDocs(userQuery);
+    return querySnapshot.docs[0].data();
+  } catch (error) {
+    console.log(error);
+    return "error";
+  }
+};

@@ -21,6 +21,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Home from "./Home";
 import { useMediaQuery } from "@mui/material";
+import Profile from "./Profile";
 
 const iconMap = {
   Home: <HomeIcon />,
@@ -142,6 +143,8 @@ function ResponsiveDrawer(props) {
       >
         {selectedItem == "Home" ? (
           <Home />
+        ) : selectedItem == "Profile" ? (
+          <Profile />
         ) : (
           <Typography paragraph>{selectedItem}</Typography>
         )}
