@@ -63,9 +63,18 @@ const App = () => {
               path="/home"
               element={
                 // <ProtectedRoute>
-                //   <Home />
+                // <Home />
                 // </ProtectedRoute>
                 <Pro />
+              }
+            />
+            <Route
+              exact
+              path="/dash"
+              element={
+                <ProtectedRoute>
+                  <Dash />
+                </ProtectedRoute>
               }
             />
             <Route
