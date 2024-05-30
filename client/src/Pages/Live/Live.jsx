@@ -1,16 +1,57 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
-  Box, AppBar, Toolbar, IconButton, Typography, Grid, Paper, Button, TextField, Avatar, Badge, useTheme, useMediaQuery
-} from '@mui/material';
-import { Videocam, Mic, Chat, Favorite, AttachMoney, ExitToApp } from '@mui/icons-material';
-import { FaUserCircle } from 'react-icons/fa';
+  Box,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Grid,
+  Paper,
+  TextField,
+  Avatar,
+  Badge,
+  useTheme,
+  useMediaQuery,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+} from "@mui/material";
+import { Favorite, AttachMoney, Send, ExitToApp } from "@mui/icons-material";
+import { FaUserCircle } from "react-icons/fa";
 
 const LiveStreamUI = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [likes, setLikes] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+  const commentsEndRef = useRef(null);
+
+  const handleLike = () => {
+    setLikes(likes + 1);
+  };
+
+  const handleCommentChange = (e) => {
+    setCommentInput(e.target.value);
+  };
+
+  const handleCommentSubmit = () => {
+    if (commentInput.trim()) {
+      setComments([...comments, commentInput.trim()]);
+      setCommentInput("");
+    }
+  };
+
+  useEffect(() => {
+    if (commentsEndRef.current) {
+      commentsEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [comments]);
 
   return (
-    <Box sx={{ flexGrow: 1, backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
+    <Box sx={{ flexGrow: 1, minHeight: "100vh" }}>
       <AppBar position="static" color="primary">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -21,92 +62,131 @@ const LiveStreamUI = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Grid container spacing={2} sx={{ p: 2 }}>
-        <Grid item xs={12} md={8}>
-          <Paper elevation={3} sx={{ height: { xs: '60vh', md: '80vh' }, position: 'relative', backgroundColor: theme.palette.background.paper }}>
-            <Box sx={{ position: 'absolute', top: 16, left: 16, display: 'flex', alignItems: 'center' }}>
+      <Grid container spacing={2} sx={{ p: 2, height: "calc(100vh - 64px)" }}>
+        <Grid item xs={12} md={8} sx={{ height: isMobile ? "100%" : "auto" }}>
+          <Paper
+            elevation={3}
+            sx={{
+              height: isMobile ? "100%" : { xs: "60vh", md: "80vh" },
+              position: "relative",
+              backgroundColor: theme.palette.background.paper,
+              overflow: "hidden",
+            }}
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <Avatar src="/path-to-avatar.jpg" />
               <Box sx={{ ml: 2 }}>
                 <Typography variant="body1">Hellan Mertino</Typography>
                 <Typography variant="body2">01:08:35</Typography>
               </Box>
             </Box>
-            <IconButton sx={{ position: 'absolute', top: 16, right: 16 }} color="inherit">
-              <ExitToApp />
-            </IconButton>
             <Box
               sx={{
-                position: 'absolute',
-                bottom: 16,
-                left: 16,
+                position: "absolute",
+                top: 16,
                 right: 16,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              <Box>
-                <IconButton color="primary">
-                  <Videocam />
-                </IconButton>
-                <IconButton color="primary">
-                  <Mic />
-                </IconButton>
-              </Box>
-              <Box>
-                <IconButton color="primary">
-                  <Chat />
-                </IconButton>
-                <IconButton color="primary">
-                  <Favorite />
-                </IconButton>
-              </Box>
+              <Badge badgeContent={likes} color="error">
+                <Favorite />
+              </Badge>
             </Box>
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                left: "50%",
+                transform: "translateX(-50%)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                p: 1,
+              }}
+            >
+              <TextField
+                variant="outlined"
+                placeholder="Type a comment..."
+                value={commentInput}
+                onChange={handleCommentChange}
+                sx={{ flex: 1, mr: 1 }}
+              />
+              <IconButton color="primary" onClick={handleCommentSubmit}>
+                <Send />
+              </IconButton>
+              <IconButton color="secondary" onClick={handleLike}>
+                <Favorite />
+              </IconButton>
+              <IconButton color="primary">
+                <AttachMoney />
+              </IconButton>
+            </Box>
+            {isMobile && (
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "50%",
+                  overflowY: "auto",
+                  position: "absolute",
+                  bottom: "60px",
+                }}
+              >
+                <List sx={{ maxHeight: "100%", overflow: "auto", p: 2 }}>
+                  {comments.map((comment, index) => (
+                    <ListItem key={index} alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar>
+                          <FaUserCircle />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary="Anonymous" secondary={comment} />
+                    </ListItem>
+                  ))}
+                  <div ref={commentsEndRef} />
+                </List>
+              </Box>
+            )}
           </Paper>
-          <Box sx={{ mt: 2, display: { xs: 'none', md: 'block' } }}>
-            <Button variant="contained" color="primary" fullWidth>
-              Go Live
-            </Button>
-          </Box>
         </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ height: { xs: '40vh', md: '80vh' }, display: 'flex', flexDirection: 'column', backgroundColor: theme.palette.background.paper }}>
-            <Box sx={{ p: 2, flexGrow: 1, overflowY: 'auto' }}>
-              <Typography variant="h6">Chat</Typography>
-              <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
-                <Avatar src="/path-to-avatar.jpg" />
-                <Typography sx={{ ml: 2 }}>Jenny Walton: Awesome! Love it!</Typography>
-              </Box>
-              <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
-                <Avatar src="/path-to-avatar.jpg" />
-                <Typography sx={{ ml: 2 }}>Stilla Mathew: Awesome!</Typography>
-              </Box>
-              {/* Add more chat messages here */}
-            </Box>
-            <Box sx={{ p: 2 }}>
-              <Box sx={{ display: 'flex', mb: 2 }}>
-                <TextField
-                  variant="outlined"
-                  placeholder="Write a comment..."
-                  fullWidth
-                />
-                <IconButton color="primary">
-                  <Chat />
-                </IconButton>
-              </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button variant="contained" color="secondary" startIcon={<AttachMoney />}>
-                  Send Gift
-                </Button>
-                <Badge badgeContent={4} color="secondary">
-                  <IconButton color="primary">
-                    <Favorite />
-                  </IconButton>
-                </Badge>
-              </Box>
-            </Box>
-          </Paper>
-        </Grid>
+        {!isMobile && (
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: "auto",
+              p: 0,
+              overflow: "auto",
+            }}
+          >
+            <Typography variant="h6">Live Chat</Typography>
+            <List sx={{ maxHeight: "100%", overflow: "auto", p: 2 }}>
+              {comments.map((comment, index) => (
+                <ListItem key={index} alignItems="flex-start">
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FaUserCircle />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Anonymous" secondary={comment} />
+                </ListItem>
+              ))}
+              <div ref={commentsEndRef} />
+            </List>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
