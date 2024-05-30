@@ -20,6 +20,16 @@ import {
 import { Favorite, AttachMoney, Send, ExitToApp } from "@mui/icons-material";
 import { FaUserCircle } from "react-icons/fa";
 
+const formatLikes = (number) => {
+  if (number >= 1000000) {
+    return (number / 1000000).toFixed(1) + "m";
+  }
+  if (number >= 1000) {
+    return (number / 1000).toFixed(1) + "k";
+  }
+  return number;
+};
+
 const LiveStreamUI = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -95,9 +105,10 @@ const LiveStreamUI = () => {
                 right: 16,
                 display: "flex",
                 alignItems: "center",
+                pr: 2, // Adjusted padding
               }}
             >
-              <Badge badgeContent={likes} color="error">
+              <Badge badgeContent={formatLikes(likes)} color="error">
                 <Favorite />
               </Badge>
             </Box>
