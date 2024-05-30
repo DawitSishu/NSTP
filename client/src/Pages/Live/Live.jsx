@@ -16,6 +16,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Button,
 } from "@mui/material";
 import { Favorite, AttachMoney, Send, ExitToApp } from "@mui/icons-material";
 import { FaUserCircle } from "react-icons/fa";
@@ -37,6 +38,10 @@ const LiveStreamUI = () => {
   const [likes, setLikes] = useState(0);
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
+  const [isGifting, setIsGifting] = useState(false);
+  const [giftAmount, setGiftAmount] = useState("");
+  const [giftMessage, setGiftMessage] = useState("");
+  const giftTimeoutRef = useRef(null);
   const commentsEndRef = useRef(null);
 
   const handleLike = () => {
@@ -51,6 +56,26 @@ const LiveStreamUI = () => {
     if (commentInput.trim()) {
       setComments([...comments, commentInput.trim()]);
       setCommentInput("");
+    }
+  };
+
+  const handleGiftAmountChange = (e) => {
+    setGiftAmount(e.target.value.replace(/\D/, ''));
+  };
+
+  const handleGiftSubmit = () => {
+    if (giftAmount.trim()) {
+      setGiftMessage(`Anonymous gifted  ETB-${giftAmount}`);
+      setGiftAmount("");
+      setIsGifting(false);
+
+      if (giftTimeoutRef.current) {
+        clearTimeout(giftTimeoutRef.current);
+      }
+
+      giftTimeoutRef.current = setTimeout(() => {
+        setGiftMessage("");
+      }, 3000);
     }
   };
 
@@ -105,7 +130,7 @@ const LiveStreamUI = () => {
                 right: 16,
                 display: "flex",
                 alignItems: "center",
-                pr: 2, // Adjusted padding
+                pr: 2,
               }}
             >
               <Badge badgeContent={formatLikes(likes)} color="error">
@@ -138,10 +163,60 @@ const LiveStreamUI = () => {
               <IconButton color="secondary" onClick={handleLike}>
                 <Favorite />
               </IconButton>
-              <IconButton color="primary">
+              <IconButton
+                color="primary"
+                onClick={() => setIsGifting((prev) => !prev)}
+              >
                 <AttachMoney />
               </IconButton>
             </Box>
+            {isGifting && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 64,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  p: 1,
+                }}
+              >
+                <TextField
+                  variant="outlined"
+                  placeholder="Enter amount..."
+                  value={giftAmount}
+                  onChange={handleGiftAmountChange}
+                  sx={{ flex: 1, mr: 1 }}
+                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleGiftSubmit}
+                >
+                  Gift
+                </Button>
+              </Box>
+            )}
+            {giftMessage && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  backgroundColor: "rgba(0,0,0,0.7)",
+                  color: "white",
+                  p: 2,
+                  borderRadius: 1,
+                }}
+              >
+                <Typography variant="body1">{giftMessage}</Typography>
+              </Box>
+            )}
             {isMobile && (
               <Box
                 sx={{
