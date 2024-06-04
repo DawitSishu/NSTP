@@ -10,7 +10,7 @@ const SignUp = React.lazy(() => import("./Pages/SignUp"));
 const Home = React.lazy(() => import("./Pages/Home"));
 const Create = React.lazy(() => import("./Pages/CreateAccount"));
 const Dash = React.lazy(() => import("./Pages/Dash"));
-const Pro = React.lazy(() => import("./Pages/Live/Live"));
+const Pro = React.lazy(() => import("./Pages/Live/Stream"));
 
 const darkTheme = createTheme({
   palette: {

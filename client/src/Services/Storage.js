@@ -2,9 +2,12 @@ import { app } from "../main";
 import { getFirestore } from "firebase/firestore";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import axios from "axios";
 
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+const CREATE_USER_URI = "http://localhost:5000/api/user/create";
 
 export const uploadProfile = async (pic, id) => {
   try {
@@ -21,46 +24,23 @@ export const uploadProfile = async (pic, id) => {
   }
 };
 
-export const CreateAccount = async (data) => {
+export const CreateAccount = async (data, token) => {
   try {
-    const usernameQuery = query(
-      collection(db, "users"),
-      where("username", "==", data.username)
+    const res = await axios.post(
+      CREATE_USER_URI,
+      { ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
-    const phoneQuery = query(
-      collection(db, "users"),
-      where("phone", "==", data.phone)
-    );
-
-    const [usernameSnapshot, phoneSnapshot] = await Promise.all([
-      getDocs(usernameQuery),
-      getDocs(phoneQuery),
-    ]);
-
-    if (!usernameSnapshot.empty && !phoneSnapshot.empty) {
-      return "Username and phone number already exist";
-    } else if (!usernameSnapshot.empty) {
-      return "Username already exists";
-    } else if (!phoneSnapshot.empty) {
-      return "Phone number already exists";
-    }
-
-    const docRef = await addDoc(collection(db, "users"), {
-      ...data,
-    });
-    return docRef;
+    return res.data;
   } catch (error) {
     console.log(error);
     return "error";
   }
-  //email
-  // phone
-  //     pic:
-  //   username:
-  //   dob:
-  //   bio:
 };
-
 export const getUserInfo = async (uid) => {
   try {
     const userQuery = query(

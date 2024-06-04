@@ -1,30 +1,43 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const userSchema = mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  name: { type: String },
-  phone: { type: String },
-  balance: { type: Number, default: 0 },
-  type: { type: String, enum: ['creator', 'audience'], required: true, default: 'audience'},
-  followers: { type: Number, default: 0 },
-  pic: { type: String },
-  username: { type: String },
-  dob: { type: Date },
-  bio: { type: String },
-  socialMedia: {
-    twitter: { type: String },
-    instagram: { type: String },
-    tiktok: { type: String }
+const userSchema = new Schema({
+  userID: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  subscriptionPlan: { type: String, default: null },
-  isVerified: { type: Boolean, default: false },
-  paymentInfo: {
-    Account: { type: String },
-    Bank: { type: String }
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  completed: {type : Boolean, default: false}
-
+  username: {
+    type: String,
+    required: true,
+  },
+  profilePicture: {
+    type: String,
+  },
+  dob: {
+    type: Date,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  joinedAt: {
+    type: Date,
+    default: Date.now,
+  },
+  isCreator: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-module.exports = mongoose.model("User", userSchema);
+// Create the user model
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;

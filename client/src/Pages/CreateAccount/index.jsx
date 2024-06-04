@@ -17,7 +17,7 @@ import { uploadProfile, CreateAccount } from "../../Services/Storage";
 import { useNavigate } from "react-router-dom";
 
 const AccountCreationPage = () => {
-  const { user } = useContext(Context);
+  const { user, getToken } = useContext(Context);
   const navigate = useNavigate();
   const [dob, setDob] = useState(null);
   const [phone, setPhone] = useState("");
@@ -57,8 +57,7 @@ const AccountCreationPage = () => {
     try {
       const profileURL = await uploadProfile(pic, user.uid);
       if (!profileURL) {
-        // error message
-        alert("error");
+        alert("Make sure to Select an Image.");
         return;
       }
       const today = new Date();
@@ -66,7 +65,6 @@ const AccountCreationPage = () => {
       let age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
 
-      // If birthdate is in future or current month but day hasn't happened yet
       if (
         monthDiff < 0 ||
         (monthDiff === 0 && today.getDate() < birthDate.getDate())
@@ -81,13 +79,15 @@ const AccountCreationPage = () => {
 
       const data = {
         userID: user.uid,
+        email: user.email,
         dob: dob.toDate(),
         phone,
         username,
         profile: profileURL,
       };
+      const token = await getToken();
 
-      const doc = await CreateAccount(data);
+      const doc = await CreateAccount(data, token);
       if (typeof doc !== "string") {
         navigate("/home");
       } else {
@@ -97,9 +97,6 @@ const AccountCreationPage = () => {
       console.log(error);
     }
   };
-
-  console.log(user.uid);
-  console.log(pic);
 
   return (
     <Container
@@ -119,7 +116,6 @@ const AccountCreationPage = () => {
         begin!
       </Typography>
       <Grid container spacing={4}>
-        {/* Image Section */}
         <Grid item xs={12} sm={6}>
           <Box display="flex" justifyContent="center">
             <img
@@ -129,7 +125,6 @@ const AccountCreationPage = () => {
             />
           </Box>
         </Grid>
-        {/* Form Section */}
         <Grid item xs={12} sm={6}>
           <form>
             <TextField

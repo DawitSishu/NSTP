@@ -11,6 +11,7 @@ connectToDb();
 app.use(require("express").json());
 
 app.use("/api/user", require("./Routes/UserRoutes"));
+app.use("/api/live", require("./Routes/LiveRoutes"));
 
 app.use(errorHandler);
 app.listen(PORT, () => {
